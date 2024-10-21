@@ -1,5 +1,16 @@
 <template>
+
     <div class="container">
+
+        <div v-if="showNegativeAlert" class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+            You can't buy negative items.
+            <button type="button" class="btn-close" @click="closeAlert"></button>
+        </div>
+
+        <div v-if="showExcessAlert" class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+            We don't have any more of this item.
+            <button type="button" class="btn-close" @click="closeAlert"></button>
+        </div>
         <div class="row">
             <div v-for="item in items" class="col-md-3">
                 <div class="card mb-4">
@@ -46,7 +57,9 @@ export default {
         return {
             items: [],
             inventory: [],
-            cart: []
+            cart: [],
+            showNegativeAlert: false,
+            showExcessAlert: false,
         }
     },
     methods: {
@@ -55,7 +68,7 @@ export default {
             const existingItem = this.cart.find(cartItem => cartItem.name == item.name);
 
             if (item.quantity <= 0) {
-                alert("we haven't more " + item.name);
+                this.showExcessAlert = true;
             } else {
                 if (existingItem) {
                     // si el item ya está en el carrito, solo modifico la cantidad
@@ -74,7 +87,7 @@ export default {
             const index = this.cart.findIndex(cartItem => cartItem.name == item.name);
 
             if (item.quantityToBuy <= 0) {
-                alert("you can't buy negative items :)");
+                this.showNegativeAlert = true;
             } else {
                 item.quantityToBuy -= 1;
                 item.quantity += 1;
@@ -134,7 +147,12 @@ export default {
                 .catch(error => {
                     console.error('Error al obtener la lista de Pokémon:', error);
                 });
-        }
+        },
+        closeAlert() {
+            this.showNegativeAlert = false;
+            this.showExcessAlert = false;
+        },
+
     },
     created() {
         this.getItems();
