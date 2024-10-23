@@ -2,15 +2,34 @@
 
     <div class="container">
 
-        <div v-if="showNegativeAlert" class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+        <div v-if="showNegativeAlert" class="alert alert-danger d-flex justify-content-between align-items-center"
+            role="alert">
             You can't buy negative items.
             <button type="button" class="btn-close" @click="closeAlert"></button>
         </div>
 
-        <div v-if="showExcessAlert" class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+        <div v-if="showExcessAlert" class="alert alert-danger d-flex justify-content-between align-items-center"
+            role="alert">
             We don't have any more of this item.
             <button type="button" class="btn-close" @click="closeAlert"></button>
         </div>
+
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="..." class="rounded me-2" alt="...">
+                    <strong class="me-auto">Bootstrap</strong>
+                    <small>11 mins ago</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    You can't buy negative items.
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="row">
             <div v-for="item in items" class="col-md-3">
                 <div class="card mb-4">
@@ -51,6 +70,7 @@
 </template>
 <script>
 import axios from 'axios';
+import * as bootstrap from 'bootstrap';
 
 export default {
     data() {
@@ -87,7 +107,8 @@ export default {
             const index = this.cart.findIndex(cartItem => cartItem.name == item.name);
 
             if (item.quantityToBuy <= 0) {
-                this.showNegativeAlert = true;
+                // this.showNegativeAlert = true;
+                this.showToast();
             } else {
                 item.quantityToBuy -= 1;
                 item.quantity += 1;
@@ -152,7 +173,11 @@ export default {
             this.showNegativeAlert = false;
             this.showExcessAlert = false;
         },
-
+        showToast() {
+            const toastElement = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
     },
     created() {
         this.getItems();
