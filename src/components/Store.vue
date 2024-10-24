@@ -14,7 +14,7 @@
             <button type="button" class="btn-close" @click="closeAlert"></button>
         </div>
 
-        <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
             <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
                     <img src="..." class="rounded me-2" alt="...">
@@ -22,8 +22,11 @@
                     <small>11 mins ago</small>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
+                <!-- <div v-for="message in messages" class="toast-body">
+                    {{ message }}
+                </div> -->
                 <div class="toast-body">
-                    You can't buy negative items.
+                    {{ message }}
                 </div>
             </div>
         </div>
@@ -80,6 +83,11 @@ export default {
             cart: [],
             showNegativeAlert: false,
             showExcessAlert: false,
+            message: "hola",
+            messages: {
+                negativeArticle: "You can't buy negative items.",
+                excessArticle: "We don't have any more of this item."
+            }
         }
     },
     methods: {
@@ -108,6 +116,7 @@ export default {
 
             if (item.quantityToBuy <= 0) {
                 // this.showNegativeAlert = true;
+                this.message = this.messages.negativeArticle;
                 this.showToast();
             } else {
                 item.quantityToBuy -= 1;
