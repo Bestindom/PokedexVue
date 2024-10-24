@@ -1,8 +1,15 @@
 <template>
-    <div class="container my-5">
-        <button v-for="type in types" class="btn m-1" :style="{ backgroundColor: type.color }"  @click="filterPokemons(type.name)">
-            <strong>{{ type.name }}</strong>
-        </button>
+    <div class="container">
+        <div>
+            <h1 class="text-center pt-5 mt-5">Pokédex</h1>
+        </div>
+
+        <div class="container my-5">
+            <button v-for="type in types" class="btn m-1" :style="{ backgroundColor: type.color }"
+                @click="filterPokemons(type.name)">
+                <strong>{{ type.name }}</strong>
+            </button>
+        </div>
     </div>
 </template>
 <script>

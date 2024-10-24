@@ -2,15 +2,23 @@
 
     <div class="container">
 
-        <div v-if="showNegativeAlert" class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
-            You can't buy negative items.
-            <button type="button" class="btn-close" @click="closeAlert"></button>
+        <div>
+            <h1 class="text-center p-5 mt-5">Store</h1>
         </div>
 
-        <div v-if="showExcessAlert" class="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
-            We don't have any more of this item.
-            <button type="button" class="btn-close" @click="closeAlert"></button>
+        <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+            <div id="liveToast" class="toast text-danger-emphasis bg-danger-subtle border border-danger-subtle"
+                role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
         </div>
+
         <div class="row">
             <div v-for="item in items" class="col-md-3">
                 <div class="card mb-4">
@@ -51,6 +59,7 @@
 </template>
 <script>
 import axios from 'axios';
+import * as bootstrap from 'bootstrap';
 
 export default {
     data() {
@@ -60,6 +69,11 @@ export default {
             cart: [],
             showNegativeAlert: false,
             showExcessAlert: false,
+            message: "hola",
+            messages: {
+                negativeArticle: "You can't buy negative items.",
+                excessArticle: "We don't have any more of this item."
+            }
         }
     },
     methods: {
@@ -68,7 +82,8 @@ export default {
             const existingItem = this.cart.find(cartItem => cartItem.name == item.name);
 
             if (item.quantity <= 0) {
-                this.showExcessAlert = true;
+                this.message = this.messages.excessArticle;
+                this.showToast();
             } else {
                 if (existingItem) {
                     // si el item ya está en el carrito, solo modifico la cantidad
@@ -87,7 +102,8 @@ export default {
             const index = this.cart.findIndex(cartItem => cartItem.name == item.name);
 
             if (item.quantityToBuy <= 0) {
-                this.showNegativeAlert = true;
+                this.message = this.messages.negativeArticle;
+                this.showToast();
             } else {
                 item.quantityToBuy -= 1;
                 item.quantity += 1;
@@ -152,7 +168,11 @@ export default {
             this.showNegativeAlert = false;
             this.showExcessAlert = false;
         },
-
+        showToast() {
+            const toastElement = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
     },
     created() {
         this.getItems();
