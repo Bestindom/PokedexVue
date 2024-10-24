@@ -1,16 +1,11 @@
 <template>
-  <div>
-    <h1 class="text-center m-5">Store</h1>
-  </div>
-  <Store>
 
-  </Store>
-  <div>
-    <h1 class="text-center m-5">Pokédex</h1>
-  </div>
-  <PokemonFilter @filter="filterByType">
+  <Navbar @section="changeSection"></Navbar>
 
-  </PokemonFilter>
+  <Store v-show="activeSection === 'store'"></Store>
+
+  <PokemonFilter @filter="filterByType" v-show="activeSection === 'pokedex'"></PokemonFilter>
+
   <div class="container">
     <div class="row">
       <div v-for="pokemon in filteredPokemons" class="col-md-4">
@@ -46,11 +41,13 @@
 import axios from 'axios';
 import PokemonFilter from './components/PokemonFilter.vue';
 import Store from './components/Store.vue';
+import Navbar from './components/Navbar.vue';
 
 export default {
   components: {
     PokemonFilter,
-    Store
+    Store,
+    Navbar
   },
   data() {
     return {
@@ -59,7 +56,7 @@ export default {
       items: [],
       favorites: [],
       team: [],
-      myModal: {},
+      activeSection: "",
       typeColors: {
         "normal": "#A8A878",
         "fire": "#F08030",
@@ -83,6 +80,10 @@ export default {
     }
   },
   methods: {
+
+    changeSection(sectionName) {
+      this.activeSection = sectionName;
+    },
 
     addToFavorites(pokemon) {
       // findIndex devuelve -1 si no encuentra al pokemon
