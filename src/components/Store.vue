@@ -164,10 +164,6 @@ export default {
                     console.error('Error al obtener la lista de Pokémon:', error);
                 });
         },
-        closeAlert() {
-            this.showNegativeAlert = false;
-            this.showExcessAlert = false;
-        },
         showToast() {
             const toastElement = document.getElementById('liveToast');
             const toast = new bootstrap.Toast(toastElement);
