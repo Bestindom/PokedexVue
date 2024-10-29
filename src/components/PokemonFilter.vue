@@ -10,12 +10,16 @@
                 <strong>{{ type.name }}</strong>
             </button>
         </div>
+
     </div>
 </template>
 <script>
 export default {
     data() {
         return {
+            filteredPokemons: [],
+            favorites: [],
+            team: [],
             types: [
                 {
                     "name": "normal",
@@ -107,7 +111,56 @@ export default {
     methods: {
         filterPokemons(typeName) {
             this.$emit("filter", typeName);
-        }
+        },
+        addToFavorites(pokemon) {
+            // findIndex devuelve -1 si no encuentra al pokemon
+            const index = this.favorites.findIndex(favorite => favorite.name === pokemon.name);
+            if (index === -1) {
+                this.favorites.push(pokemon);
+                console.log('¡Se ha agregado a favoritos:', pokemon.name, '!');
+            } else {
+                this.favorites.splice(index, 1);
+                console.log('¡Se ha quitado:', pokemon.name, '!');
+            }
+            console.log(this.favorites);
+        },
+        isFavorite(pokemon) {
+            // Iteración de la lista favorites (es como un forEach) -> return true/false
+            return this.favorites.some(favorite => favorite.name === pokemon.name);
+        },
+        addToTeam(pokemon) {
+
+            const index = this.team.findIndex(team => team.name === pokemon.name);
+            if (index === -1) {
+                if (this.team.length == 6) {
+                    alert('Your team is full')
+                } else {
+                    this.team.push(pokemon);
+                    console.log('¡Se ha agregado a tu team:', pokemon.name);
+                }
+            } else {
+                this.team.splice(index, 1);
+                console.log('¡Se ha eliminado del team:', pokemon.name);
+            }
+
+            console.log(this.team);
+        },
+        inTeam(pokemon) {
+            return this.team.some(team => team.name === pokemon.name);
+        },
+        filterByType(typeName) {
+            if (typeName === "" || typeName === "Show All") {
+                this.filteredPokemons = this.pokemons;
+            } else if (typeName == "Favorites") {
+                this.filteredPokemons = this.favorites;
+            } else if (typeName == "Team") {
+                this.filteredPokemons = this.team;
+            } else {
+                this.filteredPokemons = this.pokemons.filter(pokemon =>
+                    pokemon.types.some(type => type.type.name === typeName)
+                );
+            }
+        },
     }
 }
 </script>
