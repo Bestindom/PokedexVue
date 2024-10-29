@@ -1,6 +1,7 @@
 <template>
   <Navbar @section="changeSection" />
   <Store v-show="activeSection === 'store'" />
+  <!-- change to v-if -->
   <Pokedex v-show="activeSection === 'pokedex'" />
 
 </template>
@@ -17,7 +18,7 @@ export default {
   },
   data() {
     return {
-      activeSection: ""
+      activeSection: "pokedex"
     }
   },
   methods: {
